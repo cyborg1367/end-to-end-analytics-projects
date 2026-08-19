@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>صورت پروژه تحلیل فروش | Intro to Data Science</title>
+<style>
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("./Vazirmatn.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  --bg: #07111a;
+  --bg2: #0b1722;
+  --card: rgba(14, 28, 40, .84);
+  --card2: rgba(20, 38, 54, .72);
+  --line: rgba(255,255,255,.09);
+  --text: #f4f8fb;
+  --muted: #9eb0bf;
+  --accent: #64dbc8;
+  --accent2: #f6bd60;
+  --accent3: #7ea6ff;
+  --danger: #ff7e8f;
+  --shadow: 0 24px 70px rgba(0,0,0,.28);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+  background:
+    radial-gradient(circle at 80% -5%, rgba(100,219,200,.11), transparent 27%),
+    radial-gradient(circle at 8% 20%, rgba(126,166,255,.08), transparent 24%),
+    var(--bg);
+  line-height: 1.9;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(18px);
+  background: rgba(7,17,26,.8);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  width: min(1180px, calc(100% - 36px));
+  margin: auto;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-weight: 850;
+}
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(100,219,200,.35);
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: rgba(100,219,200,.07);
+}
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.nav a {
+  padding: 7px 11px;
+  border-radius: 10px;
+}
+.nav a:hover { background: rgba(255,255,255,.06); color: white; }
+
+main {
+  width: min(1180px, calc(100% - 36px));
+  margin: 0 auto;
+}
+
+.hero {
+  min-height: 82vh;
+  display: grid;
+  grid-template-columns: 1.25fr .75fr;
+  align-items: center;
+  gap: 48px;
+  padding: 72px 0 54px;
+}
+.kicker {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 850;
+  letter-spacing: .04em;
+  margin-bottom: 14px;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(42px, 6.2vw, 78px);
+  line-height: 1.16;
+  letter-spacing: -.045em;
+}
+.hero p {
+  max-width: 790px;
+  font-size: 19px;
+  color: #bdcad4;
+  margin: 25px 0;
+}
+.hero-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pill {
+  padding: 8px 13px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.035);
+  border-radius: 999px;
+  color: #c5d0d8;
+  font-size: 13px;
+}
+.hero-card {
+  min-height: 380px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: linear-gradient(160deg, rgba(100,219,200,.07), rgba(126,166,255,.035)), var(--card);
+  box-shadow: var(--shadow);
+  padding: 26px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-card:after {
+  content: "";
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  position: absolute;
+  left: -90px;
+  top: -95px;
+  background: rgba(100,219,200,.12);
+  filter: blur(10px);
+}
+.mock-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 2;
+}
+.dots { display:flex; gap:6px; direction:ltr; }
+.dots span { width:8px; height:8px; border-radius:50%; background:#405464; }
+.mock-title { font-size: 13px; color: var(--muted); }
+.mock-kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.mock-kpi {
+  min-height: 88px;
+  padding: 16px;
+  border-radius: 17px;
+  border: 1px solid var(--line);
+  background: rgba(6,14,22,.62);
+}
+.mock-kpi span { display:block; color:var(--muted); font-size:12px; }
+.mock-kpi strong { display:block; font-size:25px; margin-top:4px; }
+.chart {
+  height: 138px;
+  margin-top: 15px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: rgba(6,14,22,.5);
+  padding: 16px;
+  display:flex;
+  align-items:flex-end;
+  gap:7px;
+}
+.chart i {
+  display:block;
+  flex:1;
+  min-width:7px;
+  border-radius:5px 5px 2px 2px;
+  background: linear-gradient(180deg, var(--accent), rgba(100,219,200,.32));
+}
+
+.section {
+  padding: 84px 0;
+  border-top: 1px solid rgba(255,255,255,.055);
+}
+.section-head {
+  display:grid;
+  grid-template-columns: .42fr 1fr;
+  gap: 35px;
+  margin-bottom: 36px;
+}
+.section-no {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: .11em;
+  padding-top: 8px;
+}
+h2 {
+  margin: 0 0 10px;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.25;
+}
+.section-lead {
+  margin:0;
+  color:var(--muted);
+  font-size:17px;
+  max-width:780px;
+}
+
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.card {
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:24px;
+  background:var(--card);
+}
+.card h3 { margin:0 0 10px; font-size:19px; }
+.card p { margin:0; color:#aebdca; }
+.stat strong {
+  display:block;
+  color:white;
+  font-size:34px;
+  line-height:1.1;
+  margin-bottom:8px;
+}
+.stat span { font-size:13px; color:var(--muted); }
+
+.story {
+  padding: 31px;
+  border-radius: 25px;
+  border: 1px solid rgba(100,219,200,.2);
+  background: linear-gradient(135deg, rgba(100,219,200,.08), rgba(100,219,200,.025));
+  font-size: 20px;
+}
+.story strong { color:var(--accent); }
+
+.data-table {
+  width:100%;
+  border-collapse:collapse;
+  border-spacing:0;
+  overflow:hidden;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:var(--card);
+}
+.data-table th, .data-table td {
+  padding:14px 16px;
+  text-align:right;
+  border-bottom:1px solid var(--line);
+  vertical-align:top;
+}
+.data-table th {
+  color:#dce6ed;
+  background:rgba(255,255,255,.035);
+  font-size:13px;
+}
+.data-table td { color:#aebdca; font-size:14px; }
+.data-table tr:last-child td { border-bottom:none; }
+code {
+  direction:ltr;
+  display:inline-block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color:#a8f3e7;
+  background:rgba(100,219,200,.07);
+  border:1px solid rgba(100,219,200,.12);
+  padding:2px 7px;
+  border-radius:7px;
+  font-size:.92em;
+}
+
+.question {
+  display:grid;
+  grid-template-columns:54px 1fr;
+  gap:16px;
+  align-items:start;
+  padding:22px;
+  border-radius:20px;
+  border:1px solid var(--line);
+  background:var(--card);
+}
+.qn {
+  width:54px; height:54px;
+  border-radius:16px;
+  display:grid; place-items:center;
+  color:var(--accent);
+  background:rgba(100,219,200,.07);
+  border:1px solid rgba(100,219,200,.13);
+  font-weight:900;
+}
+.question h3 { margin:0 0 6px; font-size:18px; }
+.question p { margin:0; color:var(--muted); font-size:14px; }
+
+.timeline {
+  position:relative;
+  display:grid;
+  gap:16px;
+}
+.step {
+  display:grid;
+  grid-template-columns:100px 1fr;
+  gap:20px;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:23px;
+  background:var(--card);
+}
+.step-time {
+  color:var(--accent2);
+  font-weight:850;
+  font-size:14px;
+}
+.step h3 { margin:0 0 7px; font-size:19px; }
+.step p { margin:0; color:var(--muted); }
+.step ul { margin:11px 0 0; color:#b8c5cf; padding-right:21px; }
+
+.kpi {
+  padding:20px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:20px;
+}
+.kpi b { display:block; font-size:26px; color:var(--accent); margin-bottom:5px; }
+.kpi span { color:var(--muted); font-size:13px; }
+
+.chart-card {
+  border:1px solid var(--line);
+  background:var(--card);
+  border-radius:22px;
+  padding:23px;
+}
+.chart-card .type {
+  color:var(--accent3);
+  font-size:12px;
+  font-weight:800;
+}
+.chart-card h3 { margin:6px 0 9px; font-size:20px; }
+.chart-card p { margin:0 0 13px; color:var(--muted); }
+.chart-card .answer {
+  padding-top:13px;
+  border-top:1px solid var(--line);
+  color:#cad5dd;
+  font-size:14px;
+}
+
+.callout {
+  margin-top:20px;
+  padding:24px;
+  border-radius:22px;
+  border:1px solid rgba(246,189,96,.2);
+  background:rgba(246,189,96,.055);
+}
+.callout strong { color:var(--accent2); }
+
+.rules {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+.rule {
+  padding:21px;
+  border-radius:19px;
+  background:var(--card);
+  border:1px solid var(--line);
+}
+.rule strong {
+  display:block;
+  color:#fff;
+  margin-bottom:5px;
+}
+.rule span { color:var(--muted); font-size:14px; }
+
+.final {
+  padding:60px 0 90px;
+}
+.final-box {
+  padding:40px;
+  border-radius:30px;
+  border:1px solid rgba(100,219,200,.2);
+  background:
+    radial-gradient(circle at 0% 100%, rgba(100,219,200,.08), transparent 27%),
+    var(--card);
+  box-shadow:var(--shadow);
+}
+.final-box h2 { font-size:38px; }
+.deliverables {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:23px;
+}
+.deliverable {
+  padding:19px;
+  border-radius:18px;
+  background:rgba(5,13,20,.55);
+  border:1px solid var(--line);
+}
+.deliverable strong { display:block; margin-bottom:6px; }
+.deliverable span { color:var(--muted); font-size:14px; }
+
+.quote {
+  margin-top:28px;
+  font-size:22px;
+  color:#eaf2f6;
+  padding-right:20px;
+  border-right:3px solid var(--accent);
+}
+.footer {
+  padding:32px 0 45px;
+  border-top:1px solid var(--line);
+  color:#738696;
+  font-size:13px;
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+}
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns:1fr; min-height:auto; padding-top:52px; }
+  .hero-card { display:none; }
+  .section-head { grid-template-columns:1fr; gap:4px; }
+  .grid-2,.grid-3,.grid-4,.deliverables,.rules { grid-template-columns:1fr; }
+  .step { grid-template-columns:1fr; }
+  .nav { display:none; }
+}
+@media print {
+  .topbar { display:none; }
+  body { background:#fff; color:#111; }
+  main { width:92%; }
+  .card,.question,.step,.kpi,.chart-card,.rule,.final-box,.data-table {
+    background:#fff; color:#111; border-color:#ddd; box-shadow:none;
+  }
+  p,.section-lead,.card p,.question p,.step p,.rule span,.deliverable span,.data-table td {
+    color:#444 !important;
+  }
+  .section { break-inside:avoid; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">DS</div>
+      <div>Sales Analytics Project</div>
+    </div>
+    <nav class="nav">
+      <a href="#scenario">سناریو</a>
+      <a href="#data">دیتا</a>
+      <a href="#questions">سؤال‌ها</a>
+      <a href="#workflow">گام‌های کار</a>
+      <a href="#dashboard">داشبورد</a>
+      <a href="#deliverables">خروجی نهایی</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div>
+    <div class="kicker">INTRO TO DATA SCIENCE · CLASS PROJECT</div>
+    <h1>پروژه تحلیل فروش<br>از داده تا داشبورد مدیریتی</h1>
+    <p>
+      امروز قرار نیست فقط چند تابع Python اجرا کنیم. قرار است نقش یک تیم Data Analytics را بگیریم،
+      روی داده واقعی فروش تحلیل انجام دهیم، از آمار توصیفی برای پاسخ به سؤال‌های بیزینسی استفاده کنیم
+      و در پایان، نتیجه را به یک Dashboard قابل ارائه به مدیر تبدیل کنیم.
+    </p>
+    <div class="hero-meta">
+      <span class="pill">مدرس: مسعود آهنگری</span>
+      <span class="pill">مدت پروژه کلاسی: ۳ ساعت</span>
+      <span class="pill">داده واقعی فروش</span>
+      <span class="pill">NumPy + Visualization + Cursor</span>
+    </div>
+  </div>
+
+  <div class="hero-card" aria-label="dashboard preview">
+    <div class="mock-header">
+      <span class="mock-title">EXECUTIVE SALES DASHBOARD</span>
+      <div class="dots"><span></span><span></span><span></span></div>
+    </div>
+    <div class="mock-kpis">
+      <div class="mock-kpi"><span>Total Revenue</span><strong>£ —</strong></div>
+      <div class="mock-kpi"><span>Orders</span><strong>18,402</strong></div>
+      <div class="mock-kpi"><span>Mean Order</span><strong>£ —</strong></div>
+      <div class="mock-kpi"><span>Median Order</span><strong>£ —</strong></div>
+    </div>
+    <div class="chart">
+      <i style="height:24%"></i><i style="height:31%"></i><i style="height:43%"></i>
+      <i style="height:38%"></i><i style="height:58%"></i><i style="height:49%"></i>
+      <i style="height:67%"></i><i style="height:74%"></i><i style="height:61%"></i>
+      <i style="height:86%"></i><i style="height:78%"></i><i style="height:94%"></i>
+    </div>
+  </div>
+</section>
+
+<section id="scenario" class="section">
+  <div class="section-head">
+    <div class="section-no">01 · BUSINESS SCENARIO</div>
+    <div>
+      <h2>سناریوی پروژه</h2>
+      <p class="section-lead">
+        مسئله را مثل یک تمرین دانشگاهی نگاه نمی‌کنیم؛ امروز شما تیم تحلیل داده یک فروشگاه آنلاین هستید.
+      </p>
+    </div>
+  </div>
+
+  <div class="story">
+    مدیرعامل فروشگاه یک فایل از سفارش‌های واقعی شرکت در اختیار تیم شما گذاشته است.
+    او <strong>کد و جدول خام نمی‌خواهد</strong>؛ می‌خواهد بداند در کسب‌وکار چه اتفاقی افتاده،
+    رفتار معمول سفارش‌ها چگونه است، چه سفارش‌هایی غیرعادی‌اند، فروش در طول زمان چه الگویی دارد
+    و کدام بازارها برای شرکت مهم‌ترند.
+  </div>
+
+  <div class="grid-3" style="margin-top:18px">
+    <div class="card">
+      <h3>نقش ما</h3>
+      <p>تبدیل داده به Insight قابل‌فهم برای تصمیم‌گیری.</p>
+    </div>
+    <div class="card">
+      <h3>محدوده آموزشی</h3>
+      <p>تمرکز روی مباحثی است که تا امروز یاد گرفته‌ایم؛ وارد Data Cleaning و EDA پیشرفته نمی‌شویم.</p>
+    </div>
+    <div class="card">
+      <h3>هدف نهایی</h3>
+      <p>یک Dashboard مدیریتی که بتوان داستان اصلی داده را در کمتر از یک دقیقه توضیح داد.</p>
+    </div>
+  </div>
+</section>
+
+<section id="data" class="section">
+  <div class="section-head">
+    <div class="section-no">02 · THE DATA</div>
+    <div>
+      <h2>با چه دیتایی کار می‌کنیم؟</h2>
+      <p class="section-lead">
+        دیتاست از قبل برای کلاس آماده شده تا تمرکز ما روی تحلیل باشد. هر ردیف نشان‌دهنده یک سفارش کامل است.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="kpi"><b>18,402</b><span>سفارش واقعی</span></div>
+    <div class="kpi"><b>4,334</b><span>مشتری یکتا</span></div>
+    <div class="kpi"><b>37</b><span>کشور</span></div>
+    <div class="kpi"><b>GBP £</b><span>واحد پول</span></div>
+  </div>
+
+  <div class="callout">
+    <strong>بازه زمانی داده:</strong>
+    از <span dir="ltr">2010-12-01</span> تا <span dir="ltr">2011-12-09</span>.
+    تراکنش‌های Cancel شده، مقادیر ناقص و رکوردهای نامعتبر از قبل حذف شده‌اند؛
+    اما <strong>Outlierهای واقعی عمداً نگه داشته شده‌اند</strong> تا تحلیل آماری معنا داشته باشد.
+  </div>
+
+  <div style="overflow:auto; margin-top:22px">
+    <table class="data-table">
+      <thead>
+        <tr><th>ستون</th><th>معنی</th><th>چرا برای ما مهم است؟</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>OrderID</code></td><td>شناسه یکتای سفارش</td><td>برای شمارش تعداد سفارش‌ها</td></tr>
+        <tr><td><code>OrderDate</code></td><td>تاریخ سفارش</td><td>بررسی تغییر فروش در طول زمان</td></tr>
+        <tr><td><code>OrderMonth</code></td><td>ماه سفارش</td><td>ساخت نمودار Monthly Revenue</td></tr>
+        <tr><td><code>CustomerID</code></td><td>شناسه ناشناس مشتری</td><td>تشخیص تعداد مشتریان یکتا</td></tr>
+        <tr><td><code>Country</code></td><td>کشور مشتری</td><td>مقایسه بازارها از نظر Revenue</td></tr>
+        <tr><td><code>TotalQuantity</code></td><td>تعداد کل واحد کالا در سفارش</td><td>بررسی رابطه Quantity و Order Value</td></tr>
+        <tr><td><code>DistinctProducts</code></td><td>تعداد محصول متفاوت</td><td>درک تنوع سبد خرید</td></tr>
+        <tr><td><code>OrderValueGBP</code></td><td>ارزش کل سفارش</td><td>متغیر اصلی پروژه برای تحلیل آماری</td></tr>
+        <tr><td><code>AvgUnitPriceGBP</code></td><td>میانگین وزنی قیمت واحد</td><td>کمک به فهم ترکیب ارزش سفارش</td></tr>
+        <tr><td><code>MaxUnitPriceGBP</code></td><td>بیشترین قیمت واحد در سفارش</td><td>تشخیص وجود آیتم‌های گران در سبد</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="questions" class="section">
+  <div class="section-head">
+    <div class="section-no">03 · BUSINESS QUESTIONS</div>
+    <div>
+      <h2>سؤال‌هایی که باید جواب بدهیم</h2>
+      <p class="section-lead">
+        قبل از نوشتن کد، باید بدانیم دقیقاً دنبال چه چیزی هستیم. تمام تحلیل امروز حول این سؤال‌ها می‌چرخد.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="question"><div class="qn">1</div><div><h3>کل فروش شرکت چقدر بوده است؟</h3><p>Total Revenue و تعداد سفارش‌ها را محاسبه می‌کنیم.</p></div></div>
+    <div class="question"><div class="qn">2</div><div><h3>یک سفارش معمولی چقدر ارزش دارد؟</h3><p>Mean و Median را مقایسه می‌کنیم و می‌پرسیم کدام برای «Typical Order» مناسب‌تر است.</p></div></div>
+    <div class="question"><div class="qn">3</div><div><h3>آیا سفارش‌های غیرعادی داریم؟</h3><p>با Quartile، IQR و Outlier Bounds سفارش‌های آماری غیرعادی را پیدا می‌کنیم.</p></div></div>
+    <div class="question"><div class="qn">4</div><div><h3>توزیع ارزش سفارش‌ها چه شکلی است؟</h3><p>Histogram، Box Plot و مفهوم Skewness را روی داده واقعی بررسی می‌کنیم.</p></div></div>
+    <div class="question"><div class="qn">5</div><div><h3>آیا سفارش بزرگ‌تر یعنی Revenue بیشتر؟</h3><p>با Covariance و Scatter Plot رابطه Quantity و Order Value را بررسی می‌کنیم.</p></div></div>
+    <div class="question"><div class="qn">6</div><div><h3>فروش در زمان و بین کشورها چگونه تغییر می‌کند؟</h3><p>Monthly Revenue و Top Countries را برای Dashboard مدیریتی آماده می‌کنیم.</p></div></div>
+  </div>
+</section>
+
+<section id="workflow" class="section">
+  <div class="section-head">
+    <div class="section-no">04 · WORKFLOW</div>
+    <div>
+      <h2>گام‌های اجرای پروژه</h2>
+      <p class="section-lead">
+        پروژه را مرحله‌به‌مرحله جلو می‌بریم. در هر مرحله یک سؤال بیزینسی داریم، یک ابزار آماری و یک تفسیر.
+      </p>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="step">
+      <div class="step-time">0:00 → 0:15</div>
+      <div>
+        <h3>گام ۱ — شناخت مسئله و دیتا</h3>
+        <p>اول معنی هر Row و Column را می‌فهمیم و سؤال‌های مدیریتی را مشخص می‌کنیم.</p>
+        <ul><li>One row = One Order</li><li>متغیر اصلی: <code>OrderValueGBP</code></li></ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-time">0:15 → 0:40</div>
+      <div>
+        <h3>گام ۲ — خلاصه آماری فروش</h3>
+        <p>با NumPy رفتار مرکزی و میزان پراکندگی سفارش‌ها را اندازه می‌گیریم.</p>
+        <ul><li>Mean / Median / Min / Max</li><li>Variance / Standard Deviation</li></ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-time">0:40 → 1:00</div>
+      <div>
+        <h3>گام ۳ — دیدن Distribution</h3>
+        <p>Histogram را رسم می‌کنیم تا ببینیم اکثر سفارش‌ها کجا متمرکزند و دنباله توزیع به کدام سمت کشیده شده است.</p>
+        <ul><li>Histogram</li><li>Right Skew vs Symmetric</li><li>Mean vs Median</li></ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-time">1:00 → 1:30</div>
+      <div>
+        <h3>گام ۴ — Quartile، IQR و Outlier</h3>
+        <p>Q1، Q2، Q3 و IQR را حساب می‌کنیم و سپس با Boolean Masking سفارش‌های غیرعادی را پیدا می‌کنیم.</p>
+        <ul><li>Upper / Lower Bound</li><li>Outlier ≠ Bad Data</li><li>Box Plot</li></ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-time">1:40 → 2:00</div>
+      <div>
+        <h3>گام ۵ — رابطه Quantity و Revenue</h3>
+        <p>قبل از محاسبه، جهت رابطه را حدس می‌زنیم؛ سپس Covariance و Scatter Plot را بررسی می‌کنیم.</p>
+        <ul><li>Positive / Negative Covariance</li><li>Covariance does not prove causation</li></ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-time">2:00 → 2:20</div>
+      <div>
+        <h3>گام ۶ — تبدیل Analysis به Management View</h3>
+        <p>Revenue by Month و Top Countries را می‌سازیم و تصمیم می‌گیریم چه چیزهایی باید وارد Dashboard شوند.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-time">2:20 → 2:50</div>
+      <div>
+        <h3>گام ۷ — ساخت Dashboard با Cursor</h3>
+        <p>ما Metric و Insight را تعیین می‌کنیم؛ Cursor نقش Software Engineer را دارد و آن‌ها را به یک رابط حرفه‌ای تبدیل می‌کند.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-time">2:50 → 3:00</div>
+      <div>
+        <h3>گام ۸ — CEO Challenge</h3>
+        <p>Dashboard را در ۶۰ ثانیه برای مدیر توضیح می‌دهیم؛ بدون حرف زدن درباره Python یا Code.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard" class="section">
+  <div class="section-head">
+    <div class="section-no">05 · DASHBOARD DESIGN</div>
+    <div>
+      <h2>Dashboard نهایی چه چیزهایی باید داشته باشد؟</h2>
+      <p class="section-lead">
+        Dashboard قرار نیست شلوغ باشد. هر KPI و هر Chart باید یک سؤال مشخص را جواب بدهد.
+      </p>
+    </div>
+  </div>
+
+  <h3 style="margin:0 0 14px">KPIهای اصلی</h3>
+  <div class="grid-4">
+    <div class="kpi"><b>01</b><span>Total Revenue</span></div>
+    <div class="kpi"><b>02</b><span>Number of Orders</span></div>
+    <div class="kpi"><b>03</b><span>Mean Order Value</span></div>
+    <div class="kpi"><b>04</b><span>Median Order Value</span></div>
+  </div>
+
+  <div class="grid-2" style="margin-top:20px">
+    <div class="chart-card">
+      <div class="type">LINE CHART</div>
+      <h3>Monthly Revenue</h3>
+      <p>فروش در طول زمان چگونه تغییر کرده است؟</p>
+      <div class="answer">تمرکز: Trend، ماه‌های قوی/ضعیف و دوره‌های غیرعادی.</div>
+    </div>
+
+    <div class="chart-card">
+      <div class="type">HORIZONTAL BAR CHART</div>
+      <h3>Top Countries by Revenue</h3>
+      <p>کدام بازارها بیشترین Revenue را ایجاد کرده‌اند؟</p>
+      <div class="answer">تمرکز: Ranking و تمرکز Revenue بین کشورها.</div>
+    </div>
+
+    <div class="chart-card">
+      <div class="type">HISTOGRAM</div>
+      <h3>Order Value Distribution</h3>
+      <p>بیشتر سفارش‌ها در چه بازه‌ای هستند و توزیع چه شکلی دارد؟</p>
+      <div class="answer">تمرکز: Frequency، Right Skew، Mean vs Median.</div>
+    </div>
+
+    <div class="chart-card">
+      <div class="type">BOX PLOT</div>
+      <h3>Order Value Box Plot</h3>
+      <p>Middle 50% کجاست و چه سفارش‌هایی از نظر آماری غیرعادی‌اند؟</p>
+      <div class="answer">تمرکز: Q1، Median، Q3، IQR و Outlier.</div>
+    </div>
+
+    <div class="chart-card">
+      <div class="type">SCATTER PLOT</div>
+      <h3>Quantity vs Order Value</h3>
+      <p>آیا سفارش‌هایی با تعداد کالای بیشتر معمولاً ارزش بیشتری هم دارند؟</p>
+      <div class="answer">تمرکز: جهت رابطه، Covariance و پراکندگی نقاط.</div>
+    </div>
+
+    <div class="chart-card">
+      <div class="type">ANALYTICS CALLOUT</div>
+      <h3>What the Data Is Telling Us</h3>
+      <p>Dashboard باید فقط Chart نشان ندهد؛ باید Insight هم بیان کند.</p>
+      <div class="answer">Mean vs Median · Skewness · Outlier Count · Strongest Month · Top Country · Covariance Direction</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>قاعده طلایی Dashboard:</strong>
+    اگر برای یک Chart نتوانیم در یک جمله بگوییم «این نمودار چه سؤال مدیریتی را جواب می‌دهد؟»
+    احتمالاً آن Chart نباید در Dashboard باشد.
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="section-no">06 · WORKING PRINCIPLES</div>
+    <div>
+      <h2>قواعد اجرای پروژه</h2>
+      <p class="section-lead">هدف امروز فقط گرفتن خروجی از کد نیست؛ هدف یادگیری تحلیل است.</p>
+    </div>
+  </div>
+
+  <div class="rules">
+    <div class="rule"><strong>اول سؤال، بعد کد</strong><span>قبل از هر محاسبه مشخص کنید می‌خواهید به چه سؤال بیزینسی پاسخ دهید.</span></div>
+    <div class="rule"><strong>فقط عدد کافی نیست</strong><span>هر Metric باید یک Interpretation کوتاه داشته باشد.</span></div>
+    <div class="rule"><strong>Outlier را خودکار حذف نمی‌کنیم</strong><span>غیرعادی بودن با اشتباه بودن فرق دارد.</span></div>
+    <div class="rule"><strong>AI تحلیلگر ما نیست</strong><span>Cursor رابط را می‌سازد؛ Metric، Chart و Insight را ما انتخاب می‌کنیم.</span></div>
+    <div class="rule"><strong>نمودار باید سؤال جواب دهد</strong><span>هر Visualization باید دلیل مشخصی برای حضور در Dashboard داشته باشد.</span></div>
+    <div class="rule"><strong>در ارائه درباره Code حرف نزنید</strong><span>مدیر می‌خواهد Business Insight بشنود، نه نام تابع‌های Python.</span></div>
+  </div>
+</section>
+
+<section id="deliverables" class="final">
+  <div class="final-box">
+    <div class="kicker">FINAL DELIVERABLE</div>
+    <h2>در پایان این ۳ ساعت چه چیزی باید داشته باشیم؟</h2>
+    <div class="deliverables">
+      <div class="deliverable">
+        <strong>1 · تحلیل آماری</strong>
+        <span>Mean, Median, SD, Quartiles, IQR, Outliers, Covariance</span>
+      </div>
+      <div class="deliverable">
+        <strong>2 · مجموعه نمودارها</strong>
+        <span>Histogram, Box Plot, Scatter, Monthly Trend, Country Ranking</span>
+      </div>
+      <div class="deliverable">
+        <strong>3 · Dashboard مدیریتی</strong>
+        <span>یک صفحه حرفه‌ای که مهم‌ترین داستان‌های داده را سریع منتقل کند.</span>
+      </div>
+    </div>
+
+    <div class="quote">
+      «تا امروز من به شما دیتا می‌دادم و می‌گفتم چه چیزی حساب کنید.
+      امروز فقط دیتا را می‌دهم؛ این بار شما باید بفهمید چه چیزی ارزش حساب کردن دارد.»
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <span>Intro to Data Science · Sales Analytics Lab</span>
+  <span>Instructor: Masoud Ahangari</span>
+</footer>
+
+</main>
+</body>
+</html>

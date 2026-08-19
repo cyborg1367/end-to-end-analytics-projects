@@ -1,0 +1,490 @@
+You are acting as the software engineer for an Intro to Data Science classroom project.
+
+Your task is to build a complete, polished, interactive SALES ANALYTICS DASHBOARD using STREAMLIT.
+
+The analytical decisions have already been made by the instructor and students.
+Do NOT redesign the analysis from scratch.
+Do NOT invent metrics or data.
+Your job is to turn the existing analysis into a professional Streamlit application.
+
+PROJECT CONTEXT
+Dataset:
+online_retail_orders_clean.csv
+
+Each row represents ONE completed customer order.
+
+Available columns:
+- OrderID
+- OrderDate
+- OrderMonth
+- CustomerID
+- Country
+- TotalQuantity
+- DistinctProducts
+- LineCount
+- OrderValueGBP
+- AvgUnitPriceGBP
+- MaxUnitPriceGBP
+
+The data is already cleaned for this classroom project.
+
+Important:
+- Cancelled transactions were already removed.
+- Invalid rows were already removed.
+- Statistical outliers were intentionally kept.
+- Do NOT remove outliers from the analysis.
+- Currency is GBP (£).
+
+TECH STACK
+Build the dashboard with:
+- Python
+- Streamlit
+- Pandas
+- NumPy
+- Plotly
+
+Main file:
+dashboard/app.py
+
+The app should run with:
+streamlit run dashboard/app.py
+
+Assume the CSV file exists in the project root:
+online_retail_orders_clean.csv
+
+Make the data-loading path robust so the app works when launched from the project root.
+
+DASHBOARD GOAL
+The dashboard should help a business manager understand the sales data in under 60 seconds.
+
+The dashboard must reinforce the descriptive-statistics concepts covered in class:
+- Mean
+- Median
+- Variance
+- Standard Deviation
+- Quartiles
+- Percentiles
+- IQR
+- Outlier bounds
+- Histogram
+- Box Plot
+- Conceptual Skewness
+- Covariance
+- Boolean segmentation / masking
+
+This is NOT an EDA dashboard.
+Do not introduce advanced statistical topics that were not covered in class.
+
+PAGE CONFIGURATION
+Use:
+
+st.set_page_config(
+    page_title="Sales Analytics Dashboard",
+    page_icon="📊",
+    layout="wide"
+)
+
+Create a modern executive dashboard with:
+- excellent projector readability,
+- clear hierarchy,
+- generous spacing,
+- professional typography,
+- restrained colors,
+- clean cards,
+- no visual clutter.
+
+Add a title:
+Sales Analytics Dashboard
+
+Subtitle:
+Intro to Data Science — Real Retail Orders
+
+Show:
+Instructor: Masoud Ahangari
+
+DATA LOADING
+Load:
+online_retail_orders_clean.csv
+
+Use:
+@st.cache_data
+
+Convert OrderDate to datetime if needed.
+Calculate all values directly from the CSV.
+
+CORE NUMPY ARRAYS
+Create NumPy arrays for the main classroom analysis:
+
+order_value = df["OrderValueGBP"].to_numpy()
+quantity = df["TotalQuantity"].to_numpy()
+
+Use NumPy for the descriptive-statistics calculations whenever practical.
+
+TOP KPI SECTION
+Display the following KPI cards at the top:
+
+1. Total Revenue
+2. Number of Orders
+3. Mean Order Value
+4. Median Order Value
+5. Maximum Order Value
+
+Use GBP formatting for monetary values.
+
+Example formatting:
+£1,234.56
+
+The difference between Mean Order Value and Median Order Value must be visually easy to compare.
+
+STATISTICAL SUMMARY SECTION
+Calculate and display:
+
+- Q1
+- Median / Q2
+- Q3
+- IQR
+- Variance
+- Standard Deviation
+- Lower IQR Bound
+- Upper IQR Bound
+- Number of high outliers
+- Percentage of orders above the Upper IQR Bound
+
+Use:
+
+Q1 = np.percentile(order_value, 25)
+Q2 = np.percentile(order_value, 50)
+Q3 = np.percentile(order_value, 75)
+
+IQR = Q3 - Q1
+
+Lower Bound = Q1 - 1.5 * IQR
+Upper Bound = Q3 + 1.5 * IQR
+
+High outliers:
+order_value > upper_bound
+
+Important interpretation text:
+"An outlier is statistically unusual. It is not automatically an error, fraud, or a value that should be deleted."
+
+CHART 1 — MONTHLY REVENUE
+Business question:
+"How is revenue changing over time?"
+
+Create a Plotly LINE CHART.
+Aggregate total OrderValueGBP by OrderMonth.
+
+Requirements:
+- chronological order,
+- markers enabled,
+- readable month labels,
+- GBP formatting,
+- responsive width.
+
+Below the chart, add a small analysis panel called:
+How to read this chart
+
+Explain:
+- time belongs on an ordered axis,
+- peaks indicate stronger revenue months,
+- dips indicate weaker revenue months.
+
+Also calculate dynamically:
+- highest-revenue month,
+- lowest-revenue month.
+
+Do NOT invent reasons for the changes.
+
+CHART 2 — TOP 10 COUNTRIES BY REVENUE
+Business question:
+"Which markets generate the most revenue?"
+
+Create a Plotly HORIZONTAL BAR CHART.
+
+Group by Country.
+Calculate total OrderValueGBP.
+Sort descending.
+Show Top 10.
+
+Requirements:
+- largest market should be easy to identify,
+- use GBP formatting,
+- labels must be readable on a projector.
+
+Below the chart, explain:
+"Bar charts are useful when comparing categories and rankings."
+
+Calculate dynamically:
+- top country,
+- top country's revenue,
+- top country's share of total revenue.
+
+CHART 3 — ORDER VALUE HISTOGRAM
+Business question:
+"What does the distribution of customer order values look like?"
+
+Create a Plotly HISTOGRAM of OrderValueGBP.
+
+This chart is essential to the lesson.
+
+Add a view option using Streamlit controls:
+View:
+- Full distribution
+- Main 99% of orders
+
+For "Main 99%" use the 99th percentile only as a VISUAL DISPLAY LIMIT.
+
+Do NOT remove those outliers from:
+- KPIs,
+- statistics,
+- IQR calculations,
+- total revenue.
+
+When practical, add visible reference lines for:
+- Mean Order Value
+- Median Order Value
+
+Below the chart create:
+How to read this chart
+
+Explain dynamically:
+- where most orders are concentrated,
+- whether the distribution has a long right tail,
+- whether Mean is greater than Median.
+
+If Mean > Median by a meaningful amount, use plain language such as:
+"The distribution is right-skewed: a relatively small number of large orders pull the mean above the median."
+
+Do not calculate or display a skewness formula.
+Skewness should remain conceptual.
+
+CHART 4 — ORDER VALUE BOX PLOT
+Business question:
+"How spread out are order values, and which orders are statistically unusual?"
+
+Create a Plotly BOX PLOT.
+
+Use:
+- OrderValueGBP
+- visible outlier points
+
+Provide a Streamlit view option:
+- Full range
+- Main 99% visual range
+
+Again:
+Do NOT delete outliers from the dataset.
+
+Near the chart, display:
+- Q1
+- Median
+- Q3
+- IQR
+- Upper IQR Bound
+- Number of orders above Upper Bound
+
+Below the chart create:
+How to read this chart
+
+Explain:
+- box = middle 50%,
+- line inside box = median,
+- Q1 and Q3 define the box,
+- distant points represent unusual observations.
+
+Show this sentence prominently:
+"Outlier does not mean bad data."
+
+CHART 5 — TOTAL QUANTITY VS ORDER VALUE
+Business question:
+"Do orders containing more units tend to have higher order values?"
+
+Create a Plotly SCATTER PLOT.
+
+X-axis:
+TotalQuantity
+
+Y-axis:
+OrderValueGBP
+
+Because extreme values can compress the chart, add a view control:
+- Full data
+- Main 99% view
+
+For the Main 99% view, use percentile-based visual limits only.
+
+Calculate:
+covariance_matrix = np.cov(quantity, order_value)
+covariance = covariance_matrix[0, 1]
+
+Display:
+- Covariance value
+- Covariance direction:
+  - Positive
+  - Negative
+  - Near zero
+
+Below the chart explain:
+"Positive covariance means the two variables tend to move in the same direction."
+
+Also display prominently:
+"Covariance does not prove causation."
+
+ANALYTICAL INSIGHT PANEL
+Create a polished section titled:
+What the Data Is Telling Us
+
+Generate concise dynamic insights from the actual dataset.
+
+Include at least:
+1. Typical Order — compare Mean and Median.
+2. Distribution Shape — explain the right-tail / skewness interpretation.
+3. Unusual Orders — show number and percentage above the IQR Upper Bound.
+4. Strongest Month — show the month with highest total revenue.
+5. Top Market — show highest-revenue country and its share.
+6. Quantity vs Order Value — explain covariance direction.
+
+Important:
+Do not fabricate causal explanations.
+Only describe what is supported by the data.
+
+OPTIONAL SIDEBAR
+Add a clean Streamlit sidebar containing only useful controls.
+
+Recommended:
+- Country filter
+- Date range filter
+- Distribution view selector
+
+If filters are applied, clearly label the dashboard as filtered.
+
+Do not make filters so complex that they distract from the class.
+
+Important:
+All KPIs and charts should update correctly based on filters.
+
+If implementing filters makes the code unnecessarily complex, prioritize correctness and teaching clarity over extra features.
+
+TEACHING NOTES INSIDE THE DASHBOARD
+Use st.info, st.caption, or small explanation cards where helpful.
+
+Keep the following conceptual messages visible:
+
+Mean:
+"Arithmetic average; sensitive to very large orders."
+
+Median:
+"Middle order value; more resistant to extreme values."
+
+IQR:
+"Spread of the middle 50% of orders."
+
+Histogram:
+"Shows the shape and frequency distribution."
+
+Box Plot:
+"Summarizes median, quartiles, spread, and unusual observations."
+
+Covariance:
+"Shows the direction in which two numeric variables tend to move together."
+
+LAYOUT RECOMMENDATION
+Suggested dashboard structure:
+
+HEADER
+
+KPI ROW
+Total Revenue | Orders | Mean | Median | Maximum
+
+STATISTICAL SUMMARY STRIP
+Q1 | Q2 | Q3 | IQR | Std Dev | Upper Bound
+
+ROW 1
+Monthly Revenue — full width
+
+ROW 2
+Order Value Histogram | Order Value Box Plot
+
+ROW 3
+Top Countries by Revenue | Quantity vs Order Value
+
+FINAL SECTION
+What the Data Is Telling Us
+
+FOOTER
+
+DESIGN REQUIREMENTS
+The dashboard should feel like a real analytics product.
+
+Priorities:
+- polished but not flashy,
+- excellent readability,
+- suitable for a classroom projector,
+- consistent spacing,
+- restrained visual style,
+- meaningful chart titles,
+- readable axes,
+- responsive layout.
+
+Avoid:
+- excessive gradients,
+- unnecessary animations,
+- decorative charts,
+- pie charts,
+- unnecessary tabs,
+- fake numbers,
+- overly advanced statistics.
+
+CODE QUALITY
+Write clean, readable Python.
+
+Create helper functions when they genuinely improve readability.
+
+Use comments to explain major dashboard sections.
+
+Avoid unnecessary architecture.
+
+The final result should be easy for Intro to Data Science students to read with instructor guidance.
+
+FILES TO CREATE
+Create:
+dashboard/app.py
+
+Also create:
+dashboard/requirements.txt
+
+with at least:
+streamlit
+pandas
+numpy
+plotly
+
+If needed, create a short:
+dashboard/README.md
+
+containing:
+
+1. Installation command:
+pip install -r dashboard/requirements.txt
+
+2. Run command:
+streamlit run dashboard/app.py
+
+FINAL VALIDATION
+Before finishing:
+
+1. Verify the CSV path works.
+2. Verify all statistics are calculated from the real CSV.
+3. Verify no data is invented.
+4. Verify Mean and Median are both visible.
+5. Verify Histogram works.
+6. Verify Box Plot works.
+7. Verify Monthly Revenue works.
+8. Verify Top Countries works.
+9. Verify Scatter Plot works.
+10. Verify covariance is calculated correctly.
+11. Verify the IQR outlier bound is correct.
+12. Verify the Streamlit app runs without syntax errors.
+
+Do not stop at generating code.
+Review the application structure and fix obvious errors before considering the task complete.
